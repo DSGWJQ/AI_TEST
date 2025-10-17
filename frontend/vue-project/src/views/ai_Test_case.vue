@@ -48,33 +48,35 @@
       </div>
 
       <!-- 按钮区域 -->
-      <div class="lg:col-span-1 flex flex-col gap-4 justify-center">
-        <button 
-          class="px-6 py-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-xl hover:from-blue-600 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center" 
-          @click="generateTextCases"
-          :disabled="isProcessing"
-        >
-          <span class="mr-2">📝</span>
-          {{ isProcessing ? '处理中...' : '文本用例生成' }}
-        </button>
-        
-        <button 
-          class="px-6 py-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-medium rounded-xl hover:from-purple-600 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center" 
-          @click="generatePytestCases"
-          :disabled="isProcessing"
-        >
-          <span class="mr-2">🐍</span>
-          {{ isProcessing ? '处理中...' : 'pytest用例生成' }}
-        </button>
-        
-        <button 
-          class="px-6 py-4 bg-gradient-to-r from-green-500 to-green-600 text-white font-medium rounded-xl hover:from-green-600 hover:to-green-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center" 
-          @click="selfReview"
-          :disabled="isProcessing || !outputText"
-        >
-          <span class="mr-2">🔍</span>
-          {{ isProcessing ? '处理中...' : '自动审查优化' }}
-        </button>
+      <div class="lg:col-span-1">
+        <div class="flex flex-wrap items-center gap-3">
+          <button 
+            class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-xl hover:from-blue-600 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center" 
+            @click="generateTextCases"
+            :disabled="isProcessing"
+          >
+            <span class="mr-2">📝</span>
+            {{ isProcessing ? '处理中...' : '文本用例生成' }}
+          </button>
+          
+          <button 
+            class="px-6 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-medium rounded-xl hover:from-purple-600 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center" 
+            @click="generatePytestCases"
+            :disabled="isProcessing"
+          >
+            <span class="mr-2">🐍</span>
+            {{ isProcessing ? '处理中...' : 'pytest用例生成' }}
+          </button>
+          
+          <button 
+            class="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-medium rounded-xl hover:from-green-600 hover:to-green-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center" 
+            @click="selfReview"
+            :disabled="isProcessing || !outputText"
+          >
+            <span class="mr-2">🔍</span>
+            {{ isProcessing ? '处理中...' : '自动审查优化' }}
+          </button>
+        </div>
       </div>
 
       <!-- 输出区域 -->

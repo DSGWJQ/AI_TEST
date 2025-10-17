@@ -71,11 +71,11 @@
             <span class="mr-2">🛠️</span>
             操作流程
           </h3>
-          <div class="space-y-3">
+          <div class="flex flex-wrap gap-3 items-center">
             <button 
               @click="generateTestScript" 
               :disabled="isProcessing"
-              class="w-full px-4 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg hover:from-blue-600 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
+              class="px-4 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg hover:from-blue-600 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
             >
               <span class="mr-2">1️⃣</span>
               {{ isProcessing ? '生成中...' : '生成测试脚本' }}
@@ -84,7 +84,7 @@
             <button 
               @click="selfReview" 
               :disabled="!originalOutput || isProcessing"
-              class="w-full px-4 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-medium rounded-lg hover:from-green-600 hover:to-green-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
+              class="px-4 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-medium rounded-lg hover:from-green-600 hover:to-green-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
             >
               <span class="mr-2">2️⃣</span>
               {{ isProcessing ? '审查中...' : 'AI 审查并优化' }}
@@ -93,7 +93,7 @@
             <button 
               @click="executeScript" 
               :disabled="!outputText || isProcessing"
-              class="w-full px-4 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-medium rounded-lg hover:from-purple-600 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
+              class="px-4 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-medium rounded-lg hover:from-purple-600 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
             >
               <span class="mr-2">3️⃣</span>
               {{ isProcessing ? '执行中...' : '执行测试脚本' }}
@@ -102,7 +102,7 @@
             <button 
               @click="generateAdvice" 
               :disabled="!execResultText || isProcessing"
-              class="w-full px-4 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-medium rounded-lg hover:from-orange-600 hover:to-orange-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
+              class="px-4 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-medium rounded-lg hover:from-orange-600 hover:to-orange-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
             >
               <span class="mr-2">4️⃣</span>
               {{ isProcessing ? '分析中...' : '生成优化建议' }}

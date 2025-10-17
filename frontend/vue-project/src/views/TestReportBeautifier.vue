@@ -82,11 +82,11 @@
             <span class="mr-2">🛠️</span>
             操作面板
           </h3>
-          <div class="space-y-3">
+          <div class="flex flex-wrap items-center gap-3">
             <button 
               @click="generateReportSummary(originalReport)" 
               :disabled="!originalReport || isProcessing"
-              class="w-full px-4 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg hover:from-blue-600 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
+              class="px-4 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-lg hover:from-blue-600 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
             >
               <span class="mr-2">📊</span>
               {{ isProcessing ? '生成中...' : '生成报告摘要' }}
@@ -95,7 +95,7 @@
             <button 
               @click="beautifyReport" 
               :disabled="!originalReport || isProcessing"
-              class="w-full px-4 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-medium rounded-lg hover:from-green-600 hover:to-green-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
+              class="px-4 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-medium rounded-lg hover:from-green-600 hover:to-green-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
             >
               <span class="mr-2">✨</span>
               {{ isProcessing ? '美化中...' : '美化报告' }}
@@ -104,7 +104,7 @@
             <button 
               @click="downloadBeautifiedReport" 
               :disabled="!beautifiedReport"
-              class="w-full px-4 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-medium rounded-lg hover:from-purple-600 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
+              class="px-4 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-medium rounded-lg hover:from-purple-600 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
             >
               <span class="mr-2">💾</span>
               下载美化报告

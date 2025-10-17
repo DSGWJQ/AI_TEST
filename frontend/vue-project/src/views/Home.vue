@@ -2,9 +2,6 @@
     <div class="max-w-[800px] mx-auto p-5 text-center">
         <h1 class="text-2xl font-bold text-gray-800 mb-2">欢迎来到我的网站</h1>
         <p class="text-gray-600 mb-5">这是一个简单的首页</p>
-        <!-- 中间链接已删除 -->
-        <!-- 移除首页中部这组链接按钮，只保留左上角导航 -->
-        <!-- （原本的 <div class="my-8 flex ..."> ... </div> 已删除） -->
         <div class="my-8 flex justify-center flex-wrap gap-3">
             <router-link to="/login" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">登录</router-link>
             <router-link to="/register" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">注册</router-link>
