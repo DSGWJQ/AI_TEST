@@ -196,7 +196,7 @@ async function generateTestScript() {
     
     isProcessing.value = true
     
-    const prompt = `作为专业的接口测试工程师，请根据需求文档生成Python接口测试脚本。
+    const prompt = `作为专业的接口测试工程师，请根据需求文档生成基于 pytest 的 Python 接口测试脚本。
 
 需求文档：
 ${inputText.value}
@@ -204,25 +204,24 @@ ${inputText.value}
 ${sourceCode.value ? `参考源代码：\n${sourceCode.value}\n` : ''}
 
 要求：
-1. 必须在文件开头导入所有需要的模块：import requests, import json, import unittest, import time
-2. 使用requests库进行HTTP请求
-3. 基础URL必须使用：http://localhost:8000 (注意是8000端口)
-4. 可用的API端点包括：
+1. 必须在文件开头导入：import pytest, import requests, import json, import time（禁止使用 unittest）
+2. 所有测试函数必须以 test_ 开头；如使用测试类，类名以 Test 开头且方法以 test_ 开头
+3. 使用 requests 库进行 HTTP 请求，所有请求必须设置 timeout=10
+4. 基础 URL 必须使用：http://localhost:8000（注意是 8000 端口）
+5. 仅使用以下 API 端点：
    - POST /register - 用户注册，参数：{"username": "用户名", "password": "密码"}
    - POST /login - 用户登录，参数：{"username": "用户名", "password": "密码"}
    - POST /send-code - 发送验证码，参数：{"email": "邮箱"}
    - POST /verify-code - 验证码验证，参数：{"email": "邮箱", "code": "验证码"}
    - GET / - 根路径测试，返回：{"code": 200, "msg": "success", "data": {"hello": "world"}}
-5. 响应格式为：{"code": 200, "msg": "success", "data": {...}}
-6. 所有requests请求必须设置timeout=10参数
-7. 请只使用上述列出的API端点，不要使用不存在的端点如/api/v1/users
-8. 包含完整的测试用例，覆盖正常和异常情况
-9. 添加适当的断言和错误处理
-10. 代码结构清晰，注释完整
-11. 可以直接执行
-12. 如果需要使用time.time()生成唯一标识符，确保已导入time模块
+6. 响应格式为：{"code": 200, "msg": "success", "data": {...}}
+7. 覆盖正常与异常场景，添加必要断言与错误处理
+8. 禁止包含 if __name__ == "__main__" 或 unittest.main()，脚本需可通过 pytest 直接运行
+9. 优先使用 pytest fixture 管理通用数据（如 base_url、登录态、公共请求头等）
+10. 确保至少包含一个可收集的测试函数（以 test_ 开头）
+11. 如需唯一标识符，使用 time.time() 并确保已导入
 
-重要：请直接输出Python代码，不要包含任何中文解释、说明文字或代码块标记。第一行必须是Python代码（如import语句或注释）。`
+重要：请直接输出 Python 代码，不要包含任何中文解释、说明文字或代码块标记。第一行必须是 Python 代码（如 import 语句）。`
 
     const content = await callAIWrapper(prompt)
     
@@ -248,18 +247,18 @@ async function selfReview() {
     
     isProcessing.value = true
     
-    const prompt = `请审查以下接口测试脚本并提供优化版本：
+    const prompt = `请审查以下基于 pytest 的接口测试脚本并提供优化后的完整版本（保持 pytest 与 test_ 规范）：
 
 ${originalOutput.value}
 
 审查要点：
 1. 代码语法和逻辑是否正确
-2. 测试覆盖是否充分
-3. 错误处理是否完善
-4. 代码结构是否合理
-5. 性能优化建议
+2. 测试覆盖是否充分（正常/异常/边界）
+3. 断言与错误处理是否合理
+4. 代码结构与可读性是否良好（fixture/参数化等）
+5. 性能与稳定性建议
 
-重要：请直接输出修正后的完整Python代码，不要包含任何中文解释、说明文字或代码块标记。第一行必须是Python代码。`
+重要：请直接输出修正后的完整 pytest 脚本，不要包含任何中文解释、说明文字或代码块标记。第一行必须是 Python 代码（如 import 语句）。`
 
     const content = await callAIWrapper(prompt)
     
@@ -480,6 +479,10 @@ ${execResultText.value}
 
 // 检测运行器类型
 function detectRunner(code) {
-  return /pytest/.test(code) ? 'pytest' : 'python'
+  const hasPytestImport = /import\s+pytest/.test(code)
+  const hasPytestWord = /\bpytest\b/.test(code)
+  const hasTestFn = /def\s+test_[A-Za-z0-9_]+\s*\(/.test(code)
+  const hasTestClass = /class\s+Test[A-Za-z0-9_]*\s*\(/.test(code)
+  return (hasPytestImport || hasPytestWord || hasTestFn || hasTestClass) ? 'pytest' : 'python'
 }
 </script>

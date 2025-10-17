@@ -21,7 +21,7 @@ from pydantic import BaseModel
 
 # 导入自定义清理工具模块
 from app.sanitizer import clean_code_content, validate_chinese_ratio
-from app.script_executor import get_script_executor, ExecutionStatus
+from app.script_executor import get_script_executor, ExecutionStatus, cleanup_executor
 from sqlalchemy.orm import Session
 
 # 在文件最开头添加
@@ -154,19 +154,40 @@ async def run_code(req: CodeRunRequest):
         if runner not in ["python", "pytest"]:
             raise ValueError(f"不支持的执行器: {runner}")
         
+        print(f"[run_code接口] 开始处理代码执行请求")
+        print(f"[run_code接口] 原始代码长度: {len(req.code)} 字符")
+        print(f"[run_code接口] 执行器类型: {runner}")
+        print(f"[run_code接口] 超时设置: {req.timeout or 30} 秒")
+        
         # 检查代码中的中文字符比例
-        validate_chinese_ratio(req.code)
+        is_valid, chinese_ratio = validate_chinese_ratio(req.code)
+        print(f"[run_code接口] 中文字符比例检查: {chinese_ratio:.2%} ({'通过' if is_valid else '未通过'})")
+        if not is_valid:
+            raise ValueError(f"代码中中文字符比例过高: {chinese_ratio:.2%}")
 
         # 写入文件前先清理代码
         cleaned_code = clean_code_content(req.code)
-        print(f"[代码执行] 代码清理完成，预览: {cleaned_code[:200]}...")
+        print(f"[run_code接口] 代码清理完成，清理后长度: {len(cleaned_code)} 字符")
+        print(f"[run_code接口] 清理后代码预览: {cleaned_code[:200]}...")
+        # 预编译检查语法错误，提前给出明确提示
+        try:
+            compile(cleaned_code, "<submitted_code>", "exec")
+        except SyntaxError as e:
+            err_msg = f"语法错误: {e.msg} (第{e.lineno}行, 第{e.offset}列)"
+            print(f"[run_code接口] 预编译失败: {err_msg}")
+            return BaseResponse(code=400, msg=err_msg, data={
+                "stdout": "",
+                "stderr": e.text or "",
+                "exit_code": -1,
+                "status": "error"
+            })
         
         # 获取脚本执行器
         executor = get_script_executor()
         
         # 异步执行脚本
         timeout_value = max(5, req.timeout or 30)  # 默认30秒超时
-        print(f"[代码执行] 开始异步执行，超时时间: {timeout_value}秒")
+        print(f"[run_code接口] 开始异步执行，最终超时时间: {timeout_value}秒")
         
         result = await executor.execute_script_async(
             code=cleaned_code,
@@ -174,7 +195,13 @@ async def run_code(req: CodeRunRequest):
             timeout=timeout_value
         )
         
-        print(f"[代码执行] 执行完成: status={result.status.value}, time={result.execution_time:.2f}s")
+        print(f"[run_code接口] 执行完成总结:")
+        print(f"  - 状态: {result.status.value}")
+        print(f"  - 退出码: {result.exit_code}")
+        print(f"  - 执行时间: {result.execution_time:.2f}秒")
+        print(f"  - 文件路径: {result.file_path}")
+        print(f"  - STDOUT前200字符: {result.stdout[:200]}")
+        print(f"  - STDERR前200字符: {result.stderr[:200]}")
         
         # 构建返回结果
         response_data = {
@@ -191,17 +218,21 @@ async def run_code(req: CodeRunRequest):
         # 根据执行状态返回不同的响应
         if result.status == ExecutionStatus.COMPLETED:
             if result.exit_code == 0:
+                print(f"[run_code接口] 返回成功响应")
                 return BaseResponse(data=response_data, msg="执行成功")
             else:
+                print(f"[run_code接口] 返回失败响应 (退出码: {result.exit_code})")
                 return BaseResponse(code=400, data=response_data, msg="执行失败")
         elif result.status == ExecutionStatus.TIMEOUT:
+            print(f"[run_code接口] 返回超时响应")
             return BaseResponse(code=408, data=response_data, msg=f"执行超时 ({timeout_value}秒)")
         else:
+            print(f"[run_code接口] 返回异常响应: {result.error_message}")
             return BaseResponse(code=500, data=response_data, msg=f"执行异常: {result.error_message}")
         
     except (ValueError, IOError) as e:
         error_msg = f"参数错误: {str(e)}"
-        print(f"[代码执行] 参数错误: {error_msg}")
+        print(f"[run_code接口] 参数错误: {error_msg}")
         return BaseResponse(code=400, msg=error_msg, data={
             "stdout": "",
             "stderr": str(e),
@@ -337,5 +368,10 @@ app.include_router(auth_router)
 # ============== 九、启动入口 ==============
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000)
+
+
+@app.on_event("shutdown")
+def shutdown():
+    cleanup_executor()
 
 

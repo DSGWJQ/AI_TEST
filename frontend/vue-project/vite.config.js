@@ -15,6 +15,9 @@ export default defineConfig({
     },
   },
   server: {
+    host: '127.0.0.1',
+    port: 5177,
+    strictPort: true,
     proxy: {
       // 将以 /api 开头的请求，转发到后端 FastAPI
       '/api': {

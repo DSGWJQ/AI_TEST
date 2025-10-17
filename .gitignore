@@ -1,0 +1,19 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environments
+.venv*/
+venv/
+ENV/
+env/
+
+# Pytest cache
+.pytest_cache/
+
+# Backend temp outputs
+backend/tmp/
+
+# Optional: local DB files
+*.db

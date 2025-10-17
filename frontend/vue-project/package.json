@@ -12,9 +12,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vue/devtools-api": "^8.0.2",
     "axios": "^1.12.2",
     "openai": "^5.22.0",
-    "vue": "^3.5.18"
+    "vue": "^3.5.18",
+    "vue-router": "^4.6.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.13",
