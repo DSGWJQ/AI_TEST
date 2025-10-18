@@ -15,13 +15,13 @@ export default defineConfig({
     },
   },
   server: {
-    host: '127.0.0.1',
-    port: 5177,
-    strictPort: true,
+    host: '0.0.0.0',
+    port: 5173,
+    strictPort: false, // 允许自动选择端口，避免冲突
     proxy: {
-      // 将以 /api 开头的请求，转发到后端 FastAPI
       '/api': {
-        target: 'http://127.0.0.1:8000',
+        // 环境变量优先，容器内用 host.docker.internal，本机用 localhost
+        target: process.env.DOCKER_ENV ? 'http://host.docker.internal:8000' : 'http://127.0.0.1:8000',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }

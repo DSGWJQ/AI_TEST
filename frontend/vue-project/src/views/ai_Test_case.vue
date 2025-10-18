@@ -25,10 +25,47 @@
         
         <div class="flex items-center gap-4">
           <label class="font-medium text-gray-600">模型：</label>
-          <select v-model="selectedModel" class="border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
-            <option v-for="m in availableModels" :key="m" :value="m">{{ m }}</option>
-          </select>
+          <div class="flex items-center gap-2">
+            <select v-model="selectedModel" class="border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all flex-1">
+              <option v-for="m in availableModels" :key="m" :value="m">{{ m }}</option>
+            </select>
+            <button 
+              @click="refreshModels" 
+              :disabled="isRefreshing"
+              class="px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:bg-gray-400 transition-colors"
+              title="刷新模型列表"
+            >
+              <span v-if="isRefreshing">🔄</span>
+              <span v-else">🔄</span>
+            </button>
+          </div>
         </div>
+        
+        <!-- API Key 配置 -->
+        <div v-if="modelSource === 'online'" class="flex items-center gap-4">
+          <label class="font-medium text-gray-600">API Key：</label>
+          <div class="flex items-center gap-2 flex-1">
+            <input 
+              v-if="showApiKeyInput"
+              v-model="apiKey" 
+              type="password" 
+              placeholder="请输入 OpenRouter API Key (sk-or-v1-...)"
+              class="border border-gray-300 p-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all flex-1 bg-gray-50"
+            />
+            <span v-else class="text-green-600 text-sm">✓ 已配置 API Key</span>
+            <button 
+              @click="showApiKeyInput = !showApiKeyInput"
+              class="px-3 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors text-sm"
+            >
+              {{ showApiKeyInput ? '隐藏' : '设置' }}
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 模型状态提示 -->
+      <div v-if="modelStatus" class="mt-3 p-2 rounded-lg text-sm" :class="modelStatusClass">
+        {{ modelStatus }}
       </div>
     </section>
 
@@ -40,7 +77,7 @@
           输入需求文档：
         </label>
         <textarea 
-          class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm resize-none" 
+          class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm resize-none bg-gray-50" 
           v-model="inputText"
           placeholder="请输入您的产品需求文档..." 
           rows="12"
@@ -101,7 +138,7 @@
         审查结果：
       </h3>
       <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
-        <pre class="whitespace-pre-wrap text-sm text-gray-700">{{ reviewResult }}</pre>
+        <pre class="whitespace-pre-wrap text-sm text-gray-700 bg-gray-50">{{ reviewResult }}</pre>
       </div>
     </div>
   </div>
@@ -119,22 +156,151 @@ const originalOutput = ref("")
 const isProcessing = ref(false)
 
 // 独立模型配置与调用
-const modelSource = ref("local")
-const selectedModel = ref("deepseek-r1:7b")
-const onlineModels = [
-  'meta-llama/llama-3.3-70b-instruct:free',
-  'deepseek/deepseek-r1:free'
-]
-const localModels = ['deepseek-r1:7b', 'qwen:4b']
-const availableModels = computed(() => (modelSource.value === 'online' ? onlineModels : localModels))
+const modelSource = ref("online") // 默认使用在线模式，避免本地模型为空的问题
+const selectedModel = ref("deepseek/deepseek-r1:free") // 默认选择一个在线免费模型
+const isRefreshing = ref(false)
+const modelStatus = ref("点击刷新按钮获取最新模型列表")
 
-// 写死的配置（仅限本地开发测试）
-const HARDCODED_API_KEY = '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'
-const HARDCODED_OLLAMA_URL = 'http://localhost:11434/v1'
+// 从环境变量获取配置，如果没有则使用默认值
+const OPENROUTER_API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY || ''
+const OLLAMA_URL = import.meta.env.VITE_OLLAMA_URL || 'http://localhost:11434/v1'
+
+// API Key 状态管理
+const apiKey = ref(OPENROUTER_API_KEY)
+const showApiKeyInput = ref(!OPENROUTER_API_KEY) // 如果没有环境变量中的 API Key，显示输入框
+
+// 默认模型列表（作为备选）
+const defaultOnlineModels = [
+  'meta-llama/llama-3.3-70b-instruct:free',
+  'deepseek/deepseek-r1:free',
+  'google/gemini-flash-1.5:free',
+  'microsoft/wizardlm-2-8x22b:free'
+]
+// 本地模型列表为空，需要用户手动添加或通过API获取
+const defaultLocalModels = []
+
+// 动态模型列表
+const onlineModels = ref([...defaultOnlineModels])
+const localModels = ref([]) // 初始为空，需要通过API获取或用户手动添加
+const availableModels = computed(() => (modelSource.value === 'online' ? onlineModels.value : localModels.value))
+
+// 模型状态样式
+const modelStatusClass = computed(() => {
+  if (modelStatus.value.includes('成功') || modelStatus.value.includes('可用')) {
+    return 'bg-green-50 text-green-700 border border-green-200'
+  } else if (modelStatus.value.includes('失败') || modelStatus.value.includes('错误')) {
+    return 'bg-red-50 text-red-700 border border-red-200'
+  } else if (modelStatus.value.includes('刷新中')) {
+    return 'bg-blue-50 text-blue-700 border border-blue-200'
+  }
+  return 'bg-yellow-50 text-yellow-700 border border-yellow-200'
+})
+
+// 硬编码配置（仅作为备用，建议使用环境变量）
+const HARDCODED_API_KEY = '' // 已移除硬编码，请使用环境变量或手动输入
+const HARDCODED_OLLAMA_URL = OLLAMA_URL
 
 // 统一的AI调用函数
 async function callAIWrapper(prompt) {
-  return await callAI(prompt, modelSource.value, selectedModel.value, HARDCODED_API_KEY, HARDCODED_OLLAMA_URL)
+  const currentApiKey = apiKey.value || HARDCODED_API_KEY
+  if (!currentApiKey && modelSource.value === 'online') {
+    throw new Error('请先设置 OpenRouter API Key')
+  }
+  return await callAI(prompt, modelSource.value, selectedModel.value, currentApiKey, HARDCODED_OLLAMA_URL)
+}
+
+// 刷新模型列表
+async function refreshModels() {
+  if (isRefreshing.value) return
+  
+  isRefreshing.value = true
+  modelStatus.value = "正在刷新模型列表..."
+  
+  try {
+    if (modelSource.value === 'online') {
+      // 刷新在线模型列表
+      await refreshOnlineModels()
+    } else {
+      // 刷新本地模型列表
+      await refreshLocalModels()
+    }
+  } catch (error) {
+    console.error('刷新模型列表失败:', error)
+    modelStatus.value = `刷新失败: ${error.message}`
+  } finally {
+    isRefreshing.value = false
+  }
+}
+
+// 刷新在线模型列表
+async function refreshOnlineModels() {
+  try {
+    const currentApiKey = apiKey.value || HARDCODED_API_KEY
+    if (!currentApiKey) {
+      throw new Error('请先设置 API Key')
+    }
+    
+    // 尝试获取OpenRouter的模型列表
+    const response = await fetch('https://openrouter.ai/api/v1/models', {
+      headers: {
+        'Authorization': `Bearer ${currentApiKey}`,
+        'Content-Type': 'application/json'
+      }
+    })
+    
+    if (response.ok) {
+      const data = await response.json()
+      const freeModels = data.data
+        ?.filter(model => model.pricing?.prompt === "0" || model.id.includes(':free'))
+        ?.map(model => model.id)
+        ?.slice(0, 10) // 限制数量避免列表过长
+      
+      if (freeModels && freeModels.length > 0) {
+        onlineModels.value = [...new Set([...freeModels, ...defaultOnlineModels])]
+        modelStatus.value = `成功获取 ${freeModels.length} 个在线模型`
+      } else {
+        throw new Error('未找到可用的免费模型')
+      }
+    } else {
+      throw new Error(`API响应错误: ${response.status}`)
+    }
+  } catch (error) {
+    // 如果获取失败，使用默认列表
+    onlineModels.value = [...defaultOnlineModels]
+    modelStatus.value = `使用默认在线模型列表 (${error.message})`
+  }
+}
+
+// 刷新本地模型列表
+async function refreshLocalModels() {
+  try {
+    // 尝试获取Ollama的模型列表
+    // fetch到: http://localhost:11434/api/tags (Ollama的标准API端点)
+    const response = await fetch(`${HARDCODED_OLLAMA_URL.replace('/v1', '')}/api/tags`)
+    
+    if (response.ok) {
+      const data = await response.json()
+      const installedModels = data.models?.map(model => model.name) || []
+      
+      if (installedModels.length > 0) {
+        localModels.value = installedModels
+        modelStatus.value = `发现 ${installedModels.length} 个已安装的本地模型`
+      } else {
+        localModels.value = []
+        modelStatus.value = '未发现已安装的模型，请先使用 "ollama pull <模型名>" 下载模型'
+      }
+    } else {
+      throw new Error('无法连接到Ollama服务 (http://localhost:11434)')
+    }
+  } catch (error) {
+    // 如果获取失败，清空列表并提供指导
+    localModels.value = []
+    if (error.message.includes('Failed to fetch')) {
+      modelStatus.value = 'Ollama服务未启动，请先启动Ollama服务，然后下载模型：ollama pull deepseek-r1:7b'
+    } else {
+      modelStatus.value = `连接失败: ${error.message}`
+    }
+  }
 }
 
 // 文本用例生成
