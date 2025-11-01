@@ -1,0 +1,41 @@
+# 自动检测文本文件并处理行尾符
+* text=auto
+
+# 指定文本文件类型
+*.py text
+*.js text
+*.ts text
+*.vue text
+*.json text
+*.md text
+*.yml text
+*.yaml text
+*.html text
+*.css text
+*.scss text
+*.sh text
+*.bat text
+*.cmd text
+*.ps1 text
+
+# Windows 脚本保留 CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# 二进制文件不要转换
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.exe binary
+*.dll binary
+*.so binary
+*.dylib binary
+*.pyc binary
+*.pyo binary
+*.pyd binary

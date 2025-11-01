@@ -1,0 +1,49 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environments
+.venv*/
+venv/
+ENV/
+env/
+
+# Pytest cache
+.pytest_cache/
+
+# Backend temp outputs
+backend/tmp/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+logs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Node modules
+node_modules/
+
+# Build outputs
+dist/
+build/
+*.egg-info/
