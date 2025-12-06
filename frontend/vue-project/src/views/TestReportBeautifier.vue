@@ -1,16 +1,16 @@
 <template>
   <div class="max-w-7xl mx-auto p-6 bg-gray-50 min-h-screen">
-    <h1 class="page-title">
+    <h1 class="text-3xl font-bold mb-6 text-gray-800 flex items-center">
       <span class="mr-3">✨</span>
       测试报告美化工具
     </h1>
 
     <!-- 模型配置区域 -->
-    <section class="config-section">
-      <h2 class="section-title">模型配置</h2>
+    <section class="bg-white rounded-2xl shadow-lg p-6 mb-6 border border-gray-100">
+      <h2 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">模型配置</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="flex items-center gap-4">
-          <label class="label-text">模型来源：</label>
+          <label class="text-sm font-medium text-gray-700 whitespace-nowrap">模型来源：</label>
           <div class="flex gap-3">
             <label class="flex items-center cursor-pointer hover:text-blue-600 transition-colors">
               <input type="radio" value="online" v-model="modelSource" class="mr-2 text-blue-600">
@@ -24,15 +24,15 @@
         </div>
 
         <div class="flex items-center gap-4">
-          <label class="label-text">模型：</label>
+          <label class="text-sm font-medium text-gray-700 whitespace-nowrap">模型：</label>
           <div class="flex items-center gap-2">
-            <select v-model="selectedModel" class="select-base">
+            <select v-model="selectedModel" class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700 text-sm">
               <option v-for="m in availableModels" :key="m" :value="m">{{ m }}</option>
             </select>
             <button
               @click="refreshModels"
               :disabled="isRefreshing"
-              class="btn-small bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400"
+              class="p-2 text-white rounded-lg transition-colors disabled:cursor-not-allowed bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400"
               title="刷新模型列表"
             >
               🔄
@@ -42,19 +42,19 @@
 
         <!-- API Key 配置 -->
         <div v-if="modelSource === 'online'" class="flex items-center gap-4">
-          <label class="label-text">API Key：</label>
+          <label class="text-sm font-medium text-gray-700 whitespace-nowrap">API Key：</label>
           <div class="flex items-center gap-2 flex-1">
             <input
               v-if="showApiKeyInput"
               v-model="apiKey"
               type="password"
               placeholder="请输入 OpenRouter API Key (sk-or-v1-...)"
-              class="input-password flex-1"
+              class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm flex-1"
             />
             <span v-else class="text-green-600 text-sm">✓ 已配置 API Key</span>
             <button
               @click="showApiKeyInput = !showApiKeyInput"
-              class="btn-small bg-gray-500 hover:bg-gray-600"
+              class="p-2 text-white rounded-lg transition-colors disabled:cursor-not-allowed bg-gray-500 hover:bg-gray-600"
             >
               {{ showApiKeyInput ? '隐藏' : '设置' }}
             </button>
@@ -72,8 +72,8 @@
       <!-- 左侧：文件上传和原始报告 -->
       <div class="space-y-6">
         <!-- 文件上传区域 -->
-        <div class="card">
-          <h2 class="section-title">
+        <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+          <h2 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
             <span class="mr-2">📁</span>
             上传测试报告
           </h2>
@@ -96,8 +96,8 @@
         </div>
 
         <!-- 原始报告预览 -->
-        <div class="card">
-          <h3 class="section-title">
+        <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+          <h3 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
             <span class="mr-2">📋</span>
             原始报告内容
           </h3>
@@ -105,7 +105,7 @@
             v-model="originalReport"
             rows="12"
             placeholder="上传的报告内容将显示在这里..."
-            class="textarea-code"
+            class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y text-sm leading-relaxed font-mono bg-gray-900 text-green-400"
           ></textarea>
         </div>
       </div>
@@ -113,8 +113,8 @@
       <!-- 右侧：操作按钮和美化结果 -->
       <div class="space-y-6">
         <!-- 操作按钮区域 -->
-        <div class="card">
-          <h3 class="section-title">
+        <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+          <h3 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
             <span class="mr-2">🛠️</span>
             操作面板
           </h3>
@@ -122,7 +122,7 @@
             <button
               @click="generateReportSummary(originalReport)"
               :disabled="!originalReport || isProcessing"
-              class="btn-primary"
+              class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-xl hover:from-blue-600 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
             >
               <span class="mr-2">📊</span>
               {{ isProcessing ? '生成中...' : '生成报告摘要' }}
@@ -131,7 +131,7 @@
             <button
               @click="beautifyReport"
               :disabled="!originalReport || isProcessing"
-              class="btn-secondary"
+              class="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-medium rounded-xl hover:from-green-600 hover:to-green-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
             >
               <span class="mr-2">✨</span>
               {{ isProcessing ? '美化中...' : '美化报告' }}
@@ -140,7 +140,7 @@
             <button
               @click="downloadBeautifiedReport"
               :disabled="!beautifiedReport"
-              class="btn-accent"
+              class="px-6 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-medium rounded-xl hover:from-purple-600 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
             >
               <span class="mr-2">💾</span>
               下载美化报告
@@ -149,8 +149,8 @@
         </div>
 
         <!-- 报告摘要 -->
-        <div v-if="reportSummary" class="card">
-          <h3 class="section-title">
+        <div v-if="reportSummary" class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+          <h3 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
             <span class="mr-2">📊</span>
             报告摘要
           </h3>
@@ -160,8 +160,8 @@
         </div>
 
         <!-- 美化结果 -->
-        <div class="card">
-          <h3 class="section-title">
+        <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+          <h3 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
             <span class="mr-2">✨</span>
             美化结果
           </h3>
@@ -169,7 +169,7 @@
             v-model="beautifiedReport"
             rows="12"
             placeholder="美化后的报告将显示在这里..."
-            class="textarea-code"
+            class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y text-sm leading-relaxed font-mono bg-gray-900 text-green-400"
           ></textarea>
         </div>
       </div>
