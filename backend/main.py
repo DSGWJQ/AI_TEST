@@ -18,6 +18,9 @@ from fastapi import FastAPI, HTTPException, APIRouter, Request, Body, Header
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
+# 添加 backend 目录到模块搜索路径，支持从项目根目录启动
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 # 导入自定义清理工具模块
 from app.sanitizer import clean_code_content, validate_chinese_ratio
 from app.script_executor import get_script_executor, ExecutionStatus, cleanup_executor
