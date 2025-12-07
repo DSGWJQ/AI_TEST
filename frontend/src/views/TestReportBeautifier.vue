@@ -1,7 +1,6 @@
 <template>
   <div class="max-w-7xl mx-auto p-6 bg-gray-50 min-h-screen">
     <h1 class="text-3xl font-bold mb-6 text-gray-800 flex items-center">
-      <span class="mr-3">✨</span>
       测试报告美化工具
     </h1>
 
@@ -35,7 +34,6 @@
               class="p-2 text-white rounded-lg transition-colors disabled:cursor-not-allowed bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400"
               title="刷新模型列表"
             >
-              🔄
             </button>
           </div>
         </div>
@@ -51,7 +49,7 @@
               placeholder="请输入 OpenRouter API Key (sk-or-v1-...)"
               class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm flex-1"
             />
-            <span v-else class="text-green-600 text-sm">✓ 已配置 API Key</span>
+            <span v-else class="text-green-600 text-sm">已配置 API Key</span>
             <button
               @click="showApiKeyInput = !showApiKeyInput"
               class="p-2 text-white rounded-lg transition-colors disabled:cursor-not-allowed bg-gray-500 hover:bg-gray-600"
@@ -74,7 +72,6 @@
         <!-- 文件上传区域 -->
         <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
           <h2 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
-            <span class="mr-2">📁</span>
             上传测试报告
           </h2>
           <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
@@ -87,7 +84,6 @@
             >
             <label for="fileInput" class="cursor-pointer">
               <div class="text-gray-500 mb-2">
-                <span class="text-4xl">📄</span>
               </div>
               <p class="text-gray-600 font-medium">点击选择HTML测试报告文件</p>
               <p class="text-sm text-gray-400 mt-1">支持 .html, .htm 格式</p>
@@ -98,7 +94,6 @@
         <!-- 原始报告预览 -->
         <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
           <h3 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
-            <span class="mr-2">📋</span>
             原始报告内容
           </h3>
           <textarea
@@ -115,7 +110,6 @@
         <!-- 操作按钮区域 -->
         <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
           <h3 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
-            <span class="mr-2">🛠️</span>
             操作面板
           </h3>
           <div class="flex flex-wrap items-center gap-3">
@@ -124,7 +118,6 @@
               :disabled="!originalReport || isProcessing"
               class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-xl hover:from-blue-600 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
             >
-              <span class="mr-2">📊</span>
               {{ isProcessing ? '生成中...' : '生成报告摘要' }}
             </button>
 
@@ -133,7 +126,6 @@
               :disabled="!originalReport || isProcessing"
               class="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-medium rounded-xl hover:from-green-600 hover:to-green-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
             >
-              <span class="mr-2">✨</span>
               {{ isProcessing ? '美化中...' : '美化报告' }}
             </button>
 
@@ -142,7 +134,6 @@
               :disabled="!beautifiedReport"
               class="px-6 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-medium rounded-xl hover:from-purple-600 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
             >
-              <span class="mr-2">💾</span>
               下载美化报告
             </button>
           </div>
@@ -151,7 +142,6 @@
         <!-- 报告摘要 -->
         <div v-if="reportSummary" class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
           <h3 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
-            <span class="mr-2">📊</span>
             报告摘要
           </h3>
           <div class="p-4 bg-blue-50 rounded-lg border border-blue-200">
@@ -162,7 +152,6 @@
         <!-- 美化结果 -->
         <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
           <h3 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
-            <span class="mr-2">✨</span>
             美化结果
           </h3>
           <textarea
@@ -241,7 +230,7 @@ async function generateReportSummary(reportContent) {
 - 提供简洁的总结性语句
 
 ## OutputFormat:
-以"📊 测试通过率X%，发现Y个问题，主要涉及Z功能模块"为开头
+以"测试通过率X%，发现Y个问题，主要涉及Z功能模块"为开头
 
 ## 测试报告内容：
 ${reportContent.substring(0, 3000)}

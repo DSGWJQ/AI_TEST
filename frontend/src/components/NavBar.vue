@@ -20,7 +20,6 @@
             @click="navigate" 
             :class="buttonClass(isActive)"
           >
-            <span class="mr-2">🤖</span>
             AI测试工具
           </button>
         </RouterLink>
@@ -29,7 +28,6 @@
             @click="navigate" 
             :class="buttonClass(isActive)"
           >
-            <span class="mr-2">📊</span>
             测试报告美化
           </button>
         </RouterLink>
@@ -38,7 +36,6 @@
             @click="navigate" 
             :class="buttonClass(isActive)"
           >
-            <span class="mr-2">🔧</span>
             接口自动化工厂
           </button>
         </RouterLink>

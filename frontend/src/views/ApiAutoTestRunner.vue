@@ -1,7 +1,6 @@
 <template>
   <div class="max-w-7xl mx-auto p-6 bg-gray-50 min-h-screen">
     <h1 class="text-3xl font-bold mb-6 text-gray-800 flex items-center">
-      <span class="mr-3">🚀</span>
       接口自动化测试工厂
     </h1>
 
@@ -35,7 +34,6 @@
               class="p-2 text-white rounded-lg transition-colors disabled:cursor-not-allowed bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400"
               title="刷新模型列表"
             >
-              🔄
             </button>
           </div>
         </div>
@@ -51,7 +49,7 @@
               placeholder="请输入 OpenRouter API Key (sk-or-v1-...)"
               class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm flex-1"
             />
-            <span v-else class="text-green-600 text-sm">✓ 已配置 API Key</span>
+            <span v-else class="text-green-600 text-sm">已配置 API Key</span>
             <button
               @click="showApiKeyInput = !showApiKeyInput"
               class="p-2 text-white rounded-lg transition-colors disabled:cursor-not-allowed bg-gray-500 hover:bg-gray-600"
@@ -74,7 +72,6 @@
         <!-- 需求输入 -->
         <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
           <h3 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
-            <span class="mr-2">📋</span>
             需求文档
           </h3>
           <textarea
@@ -88,7 +85,6 @@
         <!-- 源代码输入 -->
         <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
           <h3 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
-            <span class="mr-2">💻</span>
             源代码（可选）
           </h3>
           <textarea
@@ -104,7 +100,6 @@
       <div class="flex flex-col gap-4 justify-start">
         <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
           <h3 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
-            <span class="mr-2">🛠️</span>
             操作流程
           </h3>
           <div class="flex flex-wrap gap-3 items-center">
@@ -113,7 +108,6 @@
               :disabled="isProcessing"
               class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-xl hover:from-blue-600 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
             >
-              <span class="mr-2">1️⃣</span>
               {{ isProcessing ? '生成中...' : '生成测试脚本' }}
             </button>
 
@@ -122,7 +116,6 @@
               :disabled="!originalOutput || isProcessing"
               class="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-medium rounded-xl hover:from-green-600 hover:to-green-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
             >
-              <span class="mr-2">2️⃣</span>
               {{ isProcessing ? '审查中...' : 'AI 审查并优化' }}
             </button>
 
@@ -131,7 +124,6 @@
               :disabled="!outputText || isProcessing"
               class="px-6 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-medium rounded-xl hover:from-purple-600 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
             >
-              <span class="mr-2">3️⃣</span>
               {{ isProcessing ? '执行中...' : '执行测试脚本' }}
             </button>
 
@@ -140,7 +132,6 @@
               :disabled="!execResultText || isProcessing"
               class="px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-medium rounded-xl hover:from-orange-600 hover:to-orange-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
             >
-              <span class="mr-2">4️⃣</span>
               {{ isProcessing ? '分析中...' : '生成优化建议' }}
             </button>
           </div>
@@ -152,7 +143,6 @@
         <!-- 生成的脚本 -->
         <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
           <h3 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
-            <span class="mr-2">📄</span>
             生成的测试脚本
           </h3>
           <textarea
@@ -166,7 +156,6 @@
         <!-- 执行结果 -->
         <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
           <h3 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
-            <span class="mr-2">⚡</span>
             执行结果
           </h3>
           <textarea
@@ -182,7 +171,6 @@
     <!-- 优化建议区域 -->
     <div v-if="finalAdvice" class="mt-6 bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
       <h3 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
-        <span class="mr-2">💡</span>
         优化建议
       </h3>
       <div class="p-4 bg-orange-50 rounded-lg border border-orange-200">

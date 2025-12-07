@@ -1,7 +1,6 @@
 <template>
   <div class="max-w-[1400px] mx-auto p-6 bg-gray-50 min-h-screen">
     <h1 class="text-3xl font-bold mb-6 text-gray-800 flex items-center">
-      <span class="mr-3">🤖</span>
       AI自动化测试工具
     </h1>
 
@@ -35,7 +34,6 @@
               class="p-2 text-white rounded-lg transition-colors disabled:cursor-not-allowed bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400"
               title="刷新模型列表"
             >
-              🔄
             </button>
           </div>
         </div>
@@ -51,7 +49,7 @@
               placeholder="请输入 OpenRouter API Key (sk-or-v1-...)"
               class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm flex-1"
             />
-            <span v-else class="text-green-600 text-sm">✓ 已配置 API Key</span>
+            <span v-else class="text-green-600 text-sm">已配置 API Key</span>
             <button
               @click="showApiKeyInput = !showApiKeyInput"
               class="p-2 text-white rounded-lg transition-colors disabled:cursor-not-allowed bg-gray-500 hover:bg-gray-600"
@@ -72,7 +70,6 @@
       <!-- 输入区域 -->
       <div class="lg:col-span-1">
         <label class="block mb-3 font-semibold text-gray-700 flex items-center">
-          <span class="mr-2">📋</span>
           输入需求文档：
         </label>
         <textarea
@@ -91,7 +88,6 @@
             @click="generateTextCases"
             :disabled="isProcessing"
           >
-            <span class="mr-2">📝</span>
             {{ isProcessing ? '处理中...' : '文本用例生成' }}
           </button>
 
@@ -100,7 +96,6 @@
             @click="generatePytestCases"
             :disabled="isProcessing"
           >
-            <span class="mr-2">🐍</span>
             {{ isProcessing ? '处理中...' : 'pytest用例生成' }}
           </button>
 
@@ -109,7 +104,6 @@
             @click="selfReview"
             :disabled="isProcessing || !outputText"
           >
-            <span class="mr-2">🔍</span>
             {{ isProcessing ? '处理中...' : '自动审查优化' }}
           </button>
         </div>
@@ -118,7 +112,6 @@
       <!-- 输出区域 -->
       <div class="lg:col-span-1">
         <label class="block mb-3 font-semibold text-gray-700 flex items-center">
-          <span class="mr-2">📄</span>
           生成的测试用例：
         </label>
         <textarea
@@ -133,7 +126,6 @@
     <!-- 审查结果区域 -->
     <div v-if="reviewResult" class="mt-6 bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
       <h3 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
-        <span class="mr-2">🔍</span>
         审查结果：
       </h3>
       <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
