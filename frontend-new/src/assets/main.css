@@ -1,6 +1,6 @@
 @import "./base.css";
 
-/* Speedtest-inspired dark theme */
+/* Speedtest 深蓝色暗黑主题配色 */
 * {
   margin: 0;
   padding: 0;
@@ -10,7 +10,8 @@
 body {
   margin: 0;
   padding: 0;
-  background: linear-gradient(180deg, #141e30 0%, #0f1419 100%);
+  /* Speedtest 风格的深蓝渐变背景 */
+  background: linear-gradient(180deg, #141e30 0%, #0a0f1a 50%, #060912 100%);
   color: #e8eaed;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   min-height: 100vh;
@@ -20,14 +21,14 @@ body {
   min-height: 100vh;
 }
 
-/* Custom scrollbar */
+/* Speedtest 风格滚动条 */
 ::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1a2332;
+  background: #0f1419;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -36,5 +37,5 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3d4e60;
+  background: #3d5a7a;
 }

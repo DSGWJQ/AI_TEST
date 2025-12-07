@@ -1,37 +1,37 @@
 <template>
-  <div class="max-w-7xl mx-auto p-6 bg-gray-50 min-h-screen">
-    <h1 class="text-3xl font-bold mb-6 text-gray-800 flex items-center">
+  <div class="max-w-7xl mx-auto p-6 min-h-screen bg-[#0f1419]">
+    <h1 class="text-3xl font-bold mb-6 text-white flex items-center">
       接口自动化测试工厂
     </h1>
 
     <!-- 模型配置区域 -->
-    <section class="bg-white rounded-2xl shadow-lg p-6 mb-6 border border-gray-100">
-      <h2 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">模型配置</h2>
+    <section class="bg-[#0f1419] rounded-2xl shadow-lg p-6 mb-6 border border-[#1a2332]">
+      <h2 class="text-xl font-semibold mb-4 text-white flex items-center">模型配置</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="flex items-center gap-4">
-          <label class="text-sm font-medium text-gray-700 whitespace-nowrap">模型来源：</label>
+          <label class="text-sm font-medium text-gray-300 whitespace-nowrap">模型来源：</label>
           <div class="flex gap-3">
-            <label class="flex items-center cursor-pointer hover:text-blue-600 transition-colors">
-              <input type="radio" value="online" v-model="modelSource" class="mr-2 text-blue-600">
-              在线（OpenRouter）
+            <label class="flex items-center cursor-pointer hover:text-cyan-400 transition-colors">
+              <input type="radio" value="online" v-model="modelSource" class="mr-2 accent-cyan-500">
+              <span class="text-gray-300">在线（OpenRouter）</span>
             </label>
-            <label class="flex items-center cursor-pointer hover:text-blue-600 transition-colors">
-              <input type="radio" value="local" v-model="modelSource" class="mr-2 text-blue-600">
-              本地（Ollama）
+            <label class="flex items-center cursor-pointer hover:text-cyan-400 transition-colors">
+              <input type="radio" value="local" v-model="modelSource" class="mr-2 accent-cyan-500">
+              <span class="text-gray-300">本地（Ollama）</span>
             </label>
           </div>
         </div>
 
         <div class="flex items-center gap-4">
-          <label class="text-sm font-medium text-gray-700 whitespace-nowrap">模型：</label>
+          <label class="text-sm font-medium text-gray-300 whitespace-nowrap">模型：</label>
           <div class="flex items-center gap-2">
-            <select v-model="selectedModel" class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-700 text-sm">
+            <select v-model="selectedModel" class="px-4 py-2 border border-[#2d3e50] rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 bg-[#1a2332] text-gray-200 text-sm">
               <option v-for="m in availableModels" :key="m" :value="m">{{ m }}</option>
             </select>
             <button
               @click="refreshModels"
               :disabled="isRefreshing"
-              class="p-2 text-white rounded-lg transition-colors disabled:cursor-not-allowed bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400"
+              class="p-2 text-white rounded-lg transition-colors disabled:cursor-not-allowed bg-cyan-600 hover:bg-cyan-700 disabled:bg-gray-600"
               title="刷新模型列表"
             >
             </button>
@@ -40,19 +40,19 @@
 
         <!-- API Key 配置 -->
         <div v-if="modelSource === 'online'" class="flex items-center gap-4">
-          <label class="text-sm font-medium text-gray-700 whitespace-nowrap">API Key：</label>
+          <label class="text-sm font-medium text-gray-300 whitespace-nowrap">API Key：</label>
           <div class="flex items-center gap-2 flex-1">
             <input
               v-if="showApiKeyInput"
               v-model="apiKey"
               type="password"
               placeholder="请输入 OpenRouter API Key (sk-or-v1-...)"
-              class="px-4 py-2 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm flex-1"
+              class="px-4 py-2 border border-[#2d3e50] rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 bg-[#1a2332] text-gray-200 text-sm flex-1"
             />
-            <span v-else class="text-green-600 text-sm">已配置 API Key</span>
+            <span v-else class="text-cyan-400 text-sm">已配置 API Key</span>
             <button
               @click="showApiKeyInput = !showApiKeyInput"
-              class="p-2 text-white rounded-lg transition-colors disabled:cursor-not-allowed bg-gray-500 hover:bg-gray-600"
+              class="p-2 text-white rounded-lg transition-colors bg-[#2d3e50] hover:bg-[#3d4e60]"
             >
               {{ showApiKeyInput ? '隐藏' : '设置' }}
             </button>
@@ -70,43 +70,43 @@
       <!-- 输入区域 -->
       <div class="space-y-6">
         <!-- 需求输入 -->
-        <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-          <h3 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
+        <div class="bg-[#0f1419] rounded-2xl shadow-lg p-6 border border-[#1a2332]">
+          <h3 class="text-xl font-semibold mb-4 text-white flex items-center">
             需求文档
           </h3>
           <textarea
             v-model="inputText"
             rows="8"
             placeholder="请输入接口需求文档..."
-            class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y text-sm leading-relaxed"
+            class="w-full p-4 border border-[#2d3e50] rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 resize-y text-sm leading-relaxed bg-[#0f1419] text-gray-200"
           ></textarea>
         </div>
 
         <!-- 源代码输入 -->
-        <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-          <h3 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
+        <div class="bg-[#0f1419] rounded-2xl shadow-lg p-6 border border-[#1a2332]">
+          <h3 class="text-xl font-semibold mb-4 text-white flex items-center">
             源代码（可选）
           </h3>
           <textarea
             v-model="sourceCode"
             rows="8"
             placeholder="可选：粘贴相关源代码以提高生成质量..."
-            class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y text-sm leading-relaxed font-mono bg-gray-900 text-green-400"
+            class="w-full p-4 border border-[#2d3e50] rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 resize-y text-sm leading-relaxed font-mono bg-[#050810] text-cyan-300"
           ></textarea>
         </div>
       </div>
 
       <!-- 操作按钮区域 -->
       <div class="flex flex-col gap-4 justify-start">
-        <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-          <h3 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
+        <div class="bg-[#0f1419] rounded-2xl shadow-lg p-6 border border-[#1a2332]">
+          <h3 class="text-xl font-semibold mb-4 text-white flex items-center">
             操作流程
           </h3>
           <div class="flex flex-wrap gap-3 items-center">
             <button
               @click="generateTestScript"
               :disabled="isProcessing"
-              class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-xl hover:from-blue-600 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
+              class="px-6 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-medium rounded-xl hover:from-cyan-600 hover:to-blue-700 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg shadow-cyan-500/30"
             >
               {{ isProcessing ? '生成中...' : '生成测试脚本' }}
             </button>
@@ -114,7 +114,7 @@
             <button
               @click="selfReview"
               :disabled="!originalOutput || isProcessing"
-              class="px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-medium rounded-xl hover:from-green-600 hover:to-green-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
+              class="px-6 py-3 bg-gradient-to-r from-green-500 to-green-700 text-white font-medium rounded-xl hover:from-green-600 hover:to-green-800 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg shadow-green-500/30"
             >
               {{ isProcessing ? '审查中...' : 'AI 审查并优化' }}
             </button>
@@ -122,7 +122,7 @@
             <button
               @click="executeScript"
               :disabled="!outputText || isProcessing"
-              class="px-6 py-3 bg-gradient-to-r from-purple-500 to-purple-600 text-white font-medium rounded-xl hover:from-purple-600 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
+              class="px-6 py-3 bg-gradient-to-r from-purple-500 to-purple-700 text-white font-medium rounded-xl hover:from-purple-600 hover:to-purple-800 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg shadow-purple-500/30"
             >
               {{ isProcessing ? '执行中...' : '执行测试脚本' }}
             </button>
@@ -130,7 +130,7 @@
             <button
               @click="generateAdvice"
               :disabled="!execResultText || isProcessing"
-              class="px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-medium rounded-xl hover:from-orange-600 hover:to-orange-700 disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center"
+              class="px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-700 text-white font-medium rounded-xl hover:from-orange-600 hover:to-orange-800 disabled:from-gray-600 disabled:to-gray-700 disabled:cursor-not-allowed transform hover:scale-105 transition-all duration-200 shadow-lg shadow-orange-500/30"
             >
               {{ isProcessing ? '分析中...' : '生成优化建议' }}
             </button>
@@ -141,40 +141,40 @@
       <!-- 输出区域 -->
       <div class="space-y-6">
         <!-- 生成的脚本 -->
-        <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-          <h3 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
+        <div class="bg-[#0f1419] rounded-2xl shadow-lg p-6 border border-[#1a2332]">
+          <h3 class="text-xl font-semibold mb-4 text-white flex items-center">
             生成的测试脚本
           </h3>
           <textarea
             v-model="outputText"
             rows="8"
             placeholder="生成的测试脚本将显示在这里..."
-            class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y text-sm leading-relaxed font-mono bg-gray-900 text-green-400"
+            class="w-full p-4 border border-[#2d3e50] rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 resize-y text-sm leading-relaxed font-mono bg-[#050810] text-cyan-300"
           ></textarea>
         </div>
 
         <!-- 执行结果 -->
-        <div class="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-          <h3 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
+        <div class="bg-[#0f1419] rounded-2xl shadow-lg p-6 border border-[#1a2332]">
+          <h3 class="text-xl font-semibold mb-4 text-white flex items-center">
             执行结果
           </h3>
           <textarea
             v-model="execResultText"
             rows="8"
             placeholder="脚本执行结果将显示在这里..."
-            class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y text-sm leading-relaxed font-mono bg-gray-900 text-green-400"
+            class="w-full p-4 border border-[#2d3e50] rounded-xl focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 resize-y text-sm leading-relaxed font-mono bg-[#050810] text-cyan-300"
           ></textarea>
         </div>
       </div>
     </div>
 
     <!-- 优化建议区域 -->
-    <div v-if="finalAdvice" class="mt-6 bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-      <h3 class="text-xl font-semibold mb-4 text-gray-800 flex items-center">
+    <div v-if="finalAdvice" class="mt-6 bg-[#0f1419] rounded-2xl shadow-lg p-6 border border-[#1a2332]">
+      <h3 class="text-xl font-semibold mb-4 text-white flex items-center">
         优化建议
       </h3>
-      <div class="p-4 bg-orange-50 rounded-lg border border-orange-200">
-        <pre class="whitespace-pre-wrap text-sm text-orange-800">{{ finalAdvice }}</pre>
+      <div class="p-4 bg-[#050810] rounded-lg border border-orange-500/30">
+        <pre class="whitespace-pre-wrap text-sm text-orange-300">{{ finalAdvice }}</pre>
       </div>
     </div>
   </div>
@@ -184,9 +184,8 @@
 import { ref } from 'vue'
 import { callAI, validateInput, showSuccess, showError } from '../utils/errorHandler'
 import { testAPI } from '../api'
-import { useModelConfig } from '../composables/useModelConfig'
+import { useModelConfig, OLLAMA_URL } from '../composables/useModelConfig'
 
-// 使用公共模型配置
 const {
   modelSource,
   selectedModel,
@@ -196,11 +195,9 @@ const {
   showApiKeyInput,
   availableModels,
   modelStatusClass,
-  refreshModels,
-  OLLAMA_URL
+  refreshModels
 } = useModelConfig()
 
-// 页面状态
 const inputText = ref('')
 const sourceCode = ref('')
 const originalOutput = ref('')
@@ -209,7 +206,6 @@ const execResultText = ref('')
 const finalAdvice = ref('')
 const isProcessing = ref(false)
 
-// AI调用包装函数
 async function callAIWrapper(prompt) {
   if (!apiKey.value && modelSource.value === 'online') {
     throw new Error('请先设置 OpenRouter API Key')
@@ -301,8 +297,8 @@ function cleanAIResponse(content) {
   cleaned = cleaned.replace(/<[^>]*>/g, '')
 
   // 移除代码块标记
-  cleaned = cleaned.replace(/```python\n?/g, '')
-  cleaned = cleaned.replace(/```\n?/g, '')
+  cleaned = cleaned.replace(/\`\`\`python\n?/g, '')
+  cleaned = cleaned.replace(/\`\`\`\n?/g, '')
 
   // 按行处理
   const lines = cleaned.split('\n')

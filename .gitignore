@@ -47,3 +47,10 @@ node_modules/
 dist/
 build/
 *.egg-info/
+
+# Frontend (旧版本，不上传)
+frontend/
+
+# Temporary files
+nul
+*.zip

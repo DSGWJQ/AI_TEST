@@ -1,15 +1,14 @@
 <template>
-  <nav class="sticky top-0 z-50 w-full bg-gray-50 border-b">
+  <!-- Speedtest 风格的深色导航栏 -->
+  <nav class="sticky top-0 z-50 w-full bg-[#0f1419] border-b border-[#1a2332]">
     <div class="max-w-screen-xl mx-auto px-4 py-3 flex items-center">
       <!-- 左侧：网站名称和Logo -->
       <div class="flex items-center gap-x-3">
         <div class="flex items-center gap-x-2">
-          <img 
-            src="/GIF_MAO.gif" 
-            alt="网站Logo" 
-            class="w-8 h-8 object-contain"
-          />
-          <h1 class="text-xl font-bold text-gray-800">测试工具平台</h1>
+          <div class="w-8 h-8 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center">
+            <span class="text-white font-bold text-sm">测</span>
+          </div>
+          <h1 class="text-xl font-bold text-white">测试工具平台</h1>
         </div>
       </div>
 
@@ -45,9 +44,8 @@
 </template>
 
 <script setup>
-// 按钮样式：匹配ai_Test_case.vue的渐变按钮样式
 const buttonClass = (isActive) =>
   isActive
-    ? 'px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-xl hover:from-blue-600 hover:to-blue-700 transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center'
-    : 'px-6 py-3 bg-gradient-to-r from-gray-400 to-gray-500 text-white font-medium rounded-xl hover:from-gray-500 hover:to-gray-600 transform hover:scale-105 transition-all duration-200 shadow-lg flex items-center justify-center'
+    ? 'px-5 py-2.5 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-medium rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all duration-200 shadow-lg shadow-cyan-500/30'
+    : 'px-5 py-2.5 bg-[#1a2332] text-gray-300 font-medium rounded-lg hover:bg-[#2d3e50] hover:text-white transition-all duration-200'
 </script>

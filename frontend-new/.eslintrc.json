@@ -1,0 +1,5 @@
+{
+  "rules": {
+    "lint/correctness/useHookAtTopLevel": "off"
+  }
+}
